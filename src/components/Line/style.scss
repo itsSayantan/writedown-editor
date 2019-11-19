@@ -1,0 +1,9 @@
+.line-wrapper {
+  width: 100%;
+  height: 20px;
+  min-width: fit-content;
+  &:focus {
+    background-color: bisque;
+    outline: none;
+  }
+}
