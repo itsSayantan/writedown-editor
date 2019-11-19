@@ -1,0 +1,25 @@
+{
+  "compileOnSave": false,
+  // setting this to false, because webpack is already
+  // invoking ts-loader to compile tsx
+
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "jsx": "react", // to use jsx in ts file (i.e., tsx)
+    "esModuleInterop": true, // to use default imports
+    "moduleResolution": "node", // to import module in node's style (w/o specifying file format)
+    "downlevelIteration": true,
+    "baseUrl": "src",
+    "paths": {
+      "@Components/*": ["components/*"],
+      "@Shared/*": ["shared/*"]
+    },
+    "declaration": true
+  },
+  "include": ["./**/*"],
+  "exclude": ["node_modules"]
+}
