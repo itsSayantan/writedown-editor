@@ -1,35 +1,59 @@
 import React from "react";
+import * as uuid4 from "uuid/v4";
+
 import { Line } from "@Components/Line";
+
+import { CommonLineProps } from "../Line/model";
 
 import "./style.scss";
 
 export function App() {
   const [numberOfLines, setNumberOfLines] = React.useState(1);
-  const [lineNumber, setLineNumber] = React.useState(1);
-  const [columnNumber, setColumnNumber] = React.useState(0);
+  const [currentLineNumber, setCurrentLineNumber] = React.useState(1);
+  const [currentColumnNumber, setCurrentColumnNumber] = React.useState(0);
+
+  const uid = uuid4.default();
+  const [arrayOfLines, setArrayOfLines] = React.useState<CommonLineProps[]>([
+    {
+      key: uid,
+      content: ""
+    }
+  ]);
 
   const newLineHandler = (remainingLine: string) => {
-    setNumberOfLines(numberOfLines + 1);
+    const copyOfArrayOfLines = [...arrayOfLines];
+    const len = copyOfArrayOfLines.length;
+    for (let i = len - 1; i >= currentLineNumber; --i) {
+      copyOfArrayOfLines[i + 1] = copyOfArrayOfLines[i];
+    }
+
+    copyOfArrayOfLines[currentLineNumber] = {
+      content: remainingLine,
+      key: uuid4.default()
+    };
+    setArrayOfLines(copyOfArrayOfLines);
+    setCurrentLineNumber(currentLineNumber + 1);
   };
 
   return (
     <>
-      <div id="container" tabIndex={0}>
-        {new Array(numberOfLines).fill(0).map((_, index) => {
+      <div id="container">
+        {arrayOfLines.map((eachLineProp, index) => {
           return (
             <Line
               onNewLine={newLineHandler}
               id={index + 1}
-              setLineNumber={setLineNumber}
-              setColumnNumber={setColumnNumber}
-              focussedLine={index === numberOfLines - 1}
-              key={"File " + index}
+              content={eachLineProp.content}
+              setCurrentLineNumber={setCurrentLineNumber}
+              setCurrentColumnNumber={setCurrentColumnNumber}
+              focussedLine={index === currentLineNumber - 1}
+              key={eachLineProp.key}
             />
           );
         })}
       </div>
       <div>
-        Ln {lineNumber}, Col {columnNumber}
+        Ln {currentLineNumber}, Col {currentColumnNumber}
       </div>
     </>
   );
