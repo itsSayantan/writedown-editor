@@ -58,11 +58,6 @@ export function Line(props: LineProps) {
     return document.querySelector(id) as HTMLElement;
   };
 
-  // const memoizedLineComponent = React.useMemo(
-  //   () => fetchLineComponent(`#${props.id}`),
-  //   [props.id]
-  // );
-
   React.useEffect(() => {
     if (props.focussedLine) {
       fetchLineComponent(`#id${props.id}`).focus();
