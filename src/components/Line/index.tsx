@@ -86,6 +86,16 @@ export function Line(props: LineProps) {
         props.setCurrentColumnNumber(caretPosition + 4);
         break;
       }
+      case "ArrowUp": {
+        if (props.id === 1) return;
+        props.setCurrentLineNumber(props.id - 1);
+        break;
+      }
+      case "ArrowDown": {
+        if (props.id === props.numberOfLines) return;
+        props.setCurrentLineNumber(props.id + 1);
+        break;
+      }
       default: {
         const { beforeContent, afterContent } = getContent(
           0,

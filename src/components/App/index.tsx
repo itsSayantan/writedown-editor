@@ -44,6 +44,7 @@ export function App() {
               onNewLine={newLineHandler}
               id={index + 1}
               content={eachLineProp.content}
+              numberOfLines={numberOfLines}
               setCurrentLineNumber={setCurrentLineNumber}
               setCurrentColumnNumber={setCurrentColumnNumber}
               focussedLine={index === currentLineNumber - 1}
