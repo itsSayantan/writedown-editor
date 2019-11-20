@@ -7,6 +7,7 @@ import "./style.scss";
 export function Line(props: LineProps) {
   const [content, setContent] = React.useState("");
   const [caretPosition, setCaretPosition] = React.useState(0);
+  const ref: React.MutableRefObject<any> = React.useRef();
 
   const handleKeyDown = (ev: React.KeyboardEvent<HTMLDivElement>) => {
     ev.preventDefault();
@@ -14,7 +15,8 @@ export function Line(props: LineProps) {
 
     switch (key) {
       case "Enter": {
-        props.onNewLine();
+        const afterContent = content.substring(caretPosition);
+        props.onNewLine(afterContent);
         break;
       }
       case "Backspace": {
@@ -50,29 +52,36 @@ export function Line(props: LineProps) {
   const handleClick = (ev: React.MouseEvent<HTMLDivElement>) => {
     const selection = window.getSelection();
     setCaretPosition(selection.focusOffset);
-    props.setLineNumber(Number(props.id));
+    props.setLineNumber(props.id);
     props.setColumnNumber(selection.focusOffset);
-  };
-
-  const fetchLineComponent = (id: string) => {
-    return document.querySelector(id) as HTMLElement;
   };
 
   React.useEffect(() => {
     if (props.focussedLine) {
-      fetchLineComponent(`#id${props.id}`).focus();
-      props.setLineNumber(Number(props.id));
+      ref?.current?.focus();
+      props.setLineNumber(props.id);
     }
-  }, []);
+  }, [props.focussedLine]);
+
+  React.useEffect(() => {
+    if (props.focussedLine) {
+      ref?.current?.scrollIntoView({
+        behavior: "auto",
+        block: "end",
+        inline: "end"
+      });
+    }
+  }, [props.focussedLine, content]);
 
   return (
     <div
+      ref={ref}
       className="line-wrapper"
       id={"id" + props.id}
       dangerouslySetInnerHTML={{ __html: content }}
       onKeyDown={handleKeyDown}
       onClick={handleClick}
-      tabIndex={Number(props.id)}
+      tabIndex={props.id}
     ></div>
   );
 }

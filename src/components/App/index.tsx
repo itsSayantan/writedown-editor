@@ -8,9 +8,10 @@ export function App() {
   const [lineNumber, setLineNumber] = React.useState(1);
   const [columnNumber, setColumnNumber] = React.useState(0);
 
-  const newLineHandler = () => {
+  const newLineHandler = (remainingLine: string) => {
     setNumberOfLines(numberOfLines + 1);
   };
+
   return (
     <>
       <div id="container" tabIndex={0}>
@@ -18,7 +19,7 @@ export function App() {
           return (
             <Line
               onNewLine={newLineHandler}
-              id={(index + 1).toString()}
+              id={index + 1}
               setLineNumber={setLineNumber}
               setColumnNumber={setColumnNumber}
               focussedLine={index === numberOfLines - 1}

@@ -1,6 +1,6 @@
 export type LineProps = {
   onNewLine: Function;
-  id: string;
+  id: number;
   setLineNumber: (x: number) => void;
   setColumnNumber: (x: number) => void;
   focussedLine: boolean;
