@@ -3,8 +3,6 @@ import * as uuid4 from "uuid/v4";
 
 import { Line } from "@Components/Line";
 
-import { CommonLineProps } from "../Line/model";
-
 import "./style.scss";
 
 export function App() {
@@ -13,84 +11,93 @@ export function App() {
   const [currentColumnNumber, setCurrentColumnNumber] = React.useState(0);
 
   const uid = uuid4.default();
-  const [arrayOfLines, setArrayOfLines] = React.useState<CommonLineProps[]>([
-    {
-      key: uid,
-      content: ""
-    }
-  ]);
+  const [arrayOfLines, setArrayOfLines] = React.useState<string[]>([uid]);
 
-  const newLineHandler = (remainingLine: string) => {
+  const [keyContentMapping, setKeyContentMapping] = React.useState<
+    Map<string, string>
+  >(new Map().set(uid, ""));
+
+  const newLineHandler = (
+    uid: string,
+    beforeContent: string,
+    remainingLine: string
+  ) => {
     const copyOfArrayOfLines = [...arrayOfLines];
     const len = copyOfArrayOfLines.length;
     for (let i = len - 1; i >= currentLineNumber; --i) {
       copyOfArrayOfLines[i + 1] = copyOfArrayOfLines[i];
     }
 
-    copyOfArrayOfLines[currentLineNumber] = {
-      content: remainingLine,
-      key: uuid4.default()
-    };
+    copyOfArrayOfLines[currentLineNumber] = uuid4.default();
+
+    const copyOfKeyContentMapping = new Map(keyContentMapping.entries());
+    copyOfKeyContentMapping.set(uid, beforeContent);
+    copyOfKeyContentMapping.set(
+      copyOfArrayOfLines[currentLineNumber],
+      remainingLine
+    );
+
+    setKeyContentMapping(copyOfKeyContentMapping);
     setArrayOfLines(copyOfArrayOfLines);
     setCurrentLineNumber(currentLineNumber + 1);
+    setNumberOfLines(numberOfLines + 1);
   };
 
   const deleteLineHandler = (
-    uid: string,
+    previousUid: string,
+    currentUid: string,
     contentToBeAppendedToThePreviousLine: string
   ) => {
-    const copyOfArrayOfLines = [...arrayOfLines];
-    const arrayOfLinesAfterDeletingLineWithGivenUid = [];
-    for (let i = 0; i < copyOfArrayOfLines.length; i++) {
-      if (copyOfArrayOfLines[i].key !== uid) {
-        // This is not the line where the deletion has occured, so push it to the arrayOfLines array.
-        arrayOfLinesAfterDeletingLineWithGivenUid.push(copyOfArrayOfLines[i]);
-      } else if (currentLineNumber === 1 && numberOfLines === 1) {
-        // This is the line where the deletion has occured and it is the first and only line in the editor.
-        // Push this line to the arrayOfLines array.
-        arrayOfLinesAfterDeletingLineWithGivenUid.push(copyOfArrayOfLines[i]);
-      } else {
-        // @TODO
-        // This is the where the deletion has occured and it is not the first and only line in the editor.
-        // Append the content of this line to the line before this if it exists.
-        if (i - 0 >= 0)
-          arrayOfLinesAfterDeletingLineWithGivenUid[
-            i - 1
-          ].content += contentToBeAppendedToThePreviousLine;
-      }
-    }
+    const copyOfKeyContentMapping = new Map(keyContentMapping.entries());
 
-    if (currentLineNumber > 1) {
+    if (copyOfKeyContentMapping.has(currentUid)) {
+      // Found the uid in the mapping.
+      // Append the remaining content of the current line
+      // to the end of the last line.
+
+      copyOfKeyContentMapping.set(
+        previousUid,
+        copyOfKeyContentMapping.get(previousUid) +
+          contentToBeAppendedToThePreviousLine
+      );
+
+      copyOfKeyContentMapping.delete(currentUid);
+
+      const copyOfArrayOfLines = [...arrayOfLines];
+      copyOfArrayOfLines.splice(
+        copyOfArrayOfLines.findIndex(e => e === currentUid),
+        1
+      );
+
+      setKeyContentMapping(copyOfKeyContentMapping);
+      setArrayOfLines(copyOfArrayOfLines);
       setCurrentLineNumber(currentLineNumber - 1);
-    } else if (currentLineNumber === 1) {
-      setCurrentColumnNumber(1);
-      // setArrayOfLines([
-      //   {
-      //     key: uuid4.default(),
-      //     content: ""
-      //   }
-      // ]);
+    } else {
+      console.log("something broke");
     }
-
-    setArrayOfLines(arrayOfLinesAfterDeletingLineWithGivenUid);
   };
-
+  const handleOnChange = (uid: string, content: string) => {
+    const copyOfKeyContentMapping = new Map(keyContentMapping.entries());
+    copyOfKeyContentMapping.set(uid, content);
+    setKeyContentMapping(copyOfKeyContentMapping);
+  };
   return (
     <>
       <div id="container">
-        {arrayOfLines.map((eachLineProp, index) => {
+        {arrayOfLines.map((key, index) => {
           return (
             <Line
               onNewLine={newLineHandler}
               deleteLine={deleteLineHandler}
               id={index + 1}
-              uid={eachLineProp.key}
-              content={eachLineProp.content}
+              uid={key}
+              content={keyContentMapping.get(key)}
               numberOfLines={numberOfLines}
               setCurrentLineNumber={setCurrentLineNumber}
               setCurrentColumnNumber={setCurrentColumnNumber}
               focussedLine={index === currentLineNumber - 1}
-              key={eachLineProp.key}
+              key={key}
+              onChange={handleOnChange}
             />
           );
         })}

@@ -1,6 +1,7 @@
 export type LineProps = {
   deleteLine: (
-    uid: string,
+    previousUid: string,
+    currentUid: string,
     contentToBeAppendedToThePreceedingLine: string
   ) => void;
   onNewLine: Function;
@@ -11,9 +12,5 @@ export type LineProps = {
   setCurrentLineNumber: (x: number) => void;
   setCurrentColumnNumber: (x: number) => void;
   focussedLine: boolean;
-};
-
-export type CommonLineProps = {
-  key: string;
-  content: string;
+  onChange: (uid: string, content: string) => void;
 };
