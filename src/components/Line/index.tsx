@@ -68,9 +68,16 @@ export function Line(props: LineProps) {
           caretPosition
         );
 
-        setContent(beforeContent + afterContent);
-        setCaretPosition(!caretPosition ? 0 : caretPosition - 1);
-        props.setCurrentColumnNumber(!caretPosition ? 0 : caretPosition - 1);
+        if (caretPosition === 0) {
+          // The line needs to be deleted at this stage.
+          // The remaining content in this line needs to be appended to the preceeding line if there is one
+          props.deleteLine(props.uid, afterContent);
+        } else {
+          // The line need not be deleted at this stage.
+          setContent(beforeContent + afterContent);
+          setCaretPosition(!caretPosition ? 0 : caretPosition - 1);
+          props.setCurrentColumnNumber(!caretPosition ? 0 : caretPosition - 1);
+        }
         break;
       }
       case "Tab": {

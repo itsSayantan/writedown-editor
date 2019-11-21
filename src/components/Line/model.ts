@@ -1,6 +1,11 @@
 export type LineProps = {
+  deleteLine: (
+    uid: string,
+    contentToBeAppendedToThePreceedingLine: string
+  ) => void;
   onNewLine: Function;
   id: number;
+  uid: string;
   content: string;
   numberOfLines: number;
   setCurrentLineNumber: (x: number) => void;
