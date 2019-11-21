@@ -7,7 +7,7 @@ import "./style.scss";
 export function Line(props: LineProps) {
   const [content, setContent] = React.useState("");
   const [caretPosition, setCaretPosition] = React.useState(0);
-  const ref: React.MutableRefObject<any> = React.useRef();
+  const ref: React.MutableRefObject<HTMLDivElement> = React.useRef();
 
   React.useEffect(() => {
     if (props.focussedLine) {
@@ -15,6 +15,10 @@ export function Line(props: LineProps) {
       props.setCurrentLineNumber(props.id);
     }
   }, [props.focussedLine]);
+
+  React.useEffect(() => {
+    props.onChange(props.uid, content);
+  }, [content, props.uid]);
 
   React.useEffect(() => {
     if (props.focussedLine) {
@@ -57,8 +61,7 @@ export function Line(props: LineProps) {
           caretPosition,
           caretPosition
         );
-        setContent(beforeContent);
-        props.onNewLine(afterContent);
+        props.onNewLine(props.uid, beforeContent, afterContent);
         break;
       }
       case "Backspace": {
@@ -71,7 +74,15 @@ export function Line(props: LineProps) {
         if (caretPosition === 0) {
           // The line needs to be deleted at this stage.
           // The remaining content in this line needs to be appended to the preceeding line if there is one
-          props.deleteLine(props.uid, afterContent);
+          // props.deleteLine(ref.current.previousSib,props.uid, afterContent);
+          const { previousElementSibling } = ref.current;
+          if (previousElementSibling) {
+            props.deleteLine(
+              previousElementSibling.id,
+              props.uid,
+              afterContent
+            );
+          }
         } else {
           // The line need not be deleted at this stage.
           setContent(beforeContent + afterContent);
@@ -84,7 +95,7 @@ export function Line(props: LineProps) {
         const { beforeContent, afterContent } = getContent(
           0,
           caretPosition,
-          caretPosition + 1
+          caretPosition
         );
         const w = beforeContent + "    " + afterContent;
 
@@ -128,7 +139,7 @@ export function Line(props: LineProps) {
     <div
       ref={ref}
       className={`line-wrapper ${props.focussedLine ? "focus" : ""}`}
-      id={`id${props.id}`}
+      id={props.uid}
       dangerouslySetInnerHTML={{ __html: content }}
       onKeyDown={handleKeyDown}
       onClick={handleClick}
