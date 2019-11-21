@@ -7,6 +7,44 @@ import "./style.scss";
 export function Line(props: LineProps) {
   const [content, setContent] = React.useState("");
   const [caretPosition, setCaretPosition] = React.useState(0);
+  const ref: React.MutableRefObject<any> = React.useRef();
+
+  React.useEffect(() => {
+    if (props.focussedLine) {
+      ref?.current?.focus();
+      props.setCurrentLineNumber(props.id);
+    }
+  }, [props.focussedLine]);
+
+  React.useEffect(() => {
+    if (props.focussedLine) {
+      ref?.current?.scrollIntoView({
+        behavior: "auto",
+        block: "end",
+        inline: "end"
+      });
+    }
+  }, [props.focussedLine, content]);
+
+  React.useEffect(() => {
+    if (props.content) {
+      setContent(props.content);
+    }
+  }, [props.content]);
+
+  const getContent = (
+    startingIndexOfTheStringBeforeCaret: number,
+    endingIndexOfTheStringBeforeCaret: number,
+    startingIndexOfTheStringAfterCaret: number
+  ) => {
+    return {
+      beforeContent: content.substring(
+        startingIndexOfTheStringBeforeCaret,
+        endingIndexOfTheStringBeforeCaret
+      ),
+      afterContent: content.substring(startingIndexOfTheStringAfterCaret)
+    };
+  };
 
   const handleKeyDown = (ev: React.KeyboardEvent<HTMLDivElement>) => {
     ev.preventDefault();
@@ -14,35 +52,60 @@ export function Line(props: LineProps) {
 
     switch (key) {
       case "Enter": {
-        props.onNewLine();
+        const { beforeContent, afterContent } = getContent(
+          0,
+          caretPosition,
+          caretPosition
+        );
+        setContent(beforeContent);
+        props.onNewLine(afterContent);
         break;
       }
       case "Backspace": {
-        const beforeContent = content.substring(0, caretPosition - 1);
-        const afterContent = content.substring(caretPosition);
+        const { beforeContent, afterContent } = getContent(
+          0,
+          caretPosition - 1,
+          caretPosition
+        );
 
         setContent(beforeContent + afterContent);
         setCaretPosition(!caretPosition ? 0 : caretPosition - 1);
-        props.setColumnNumber(!caretPosition ? 0 : caretPosition - 1);
+        props.setCurrentColumnNumber(!caretPosition ? 0 : caretPosition - 1);
         break;
       }
       case "Tab": {
-        const beforeContent = content.substring(0, caretPosition);
-        const afterContent = content.substring(caretPosition);
+        const { beforeContent, afterContent } = getContent(
+          0,
+          caretPosition,
+          caretPosition + 1
+        );
         const w = beforeContent + "    " + afterContent;
 
         setContent(w);
         setCaretPosition(caretPosition + 4);
-        props.setColumnNumber(caretPosition + 4);
+        props.setCurrentColumnNumber(caretPosition + 4);
+        break;
+      }
+      case "ArrowUp": {
+        if (props.id === 1) return;
+        props.setCurrentLineNumber(props.id - 1);
+        break;
+      }
+      case "ArrowDown": {
+        if (props.id === props.numberOfLines) return;
+        props.setCurrentLineNumber(props.id + 1);
         break;
       }
       default: {
-        const beforeContent = content.substring(0, caretPosition);
-        const afterContent = content.substring(caretPosition);
+        const { beforeContent, afterContent } = getContent(
+          0,
+          caretPosition,
+          caretPosition
+        );
 
         setContent(beforeContent + ev.key + afterContent);
         setCaretPosition(caretPosition + 1);
-        props.setColumnNumber(caretPosition + 1);
+        props.setCurrentColumnNumber(caretPosition + 1);
       }
     }
   };
@@ -50,29 +113,19 @@ export function Line(props: LineProps) {
   const handleClick = (ev: React.MouseEvent<HTMLDivElement>) => {
     const selection = window.getSelection();
     setCaretPosition(selection.focusOffset);
-    props.setLineNumber(Number(props.id));
-    props.setColumnNumber(selection.focusOffset);
+    props.setCurrentLineNumber(props.id);
+    props.setCurrentColumnNumber(selection.focusOffset);
   };
-
-  const fetchLineComponent = (id: string) => {
-    return document.querySelector(id) as HTMLElement;
-  };
-
-  React.useEffect(() => {
-    if (props.focussedLine) {
-      fetchLineComponent(`#id${props.id}`).focus();
-      props.setLineNumber(Number(props.id));
-    }
-  }, []);
 
   return (
     <div
-      className="line-wrapper"
-      id={"id" + props.id}
+      ref={ref}
+      className={`line-wrapper ${props.focussedLine ? "focus" : ""}`}
+      id={`id${props.id}`}
       dangerouslySetInnerHTML={{ __html: content }}
       onKeyDown={handleKeyDown}
       onClick={handleClick}
-      tabIndex={Number(props.id)}
+      tabIndex={props.id}
     ></div>
   );
 }
