@@ -40,6 +40,7 @@ export function App() {
     setKeyContentMapping(copyOfKeyContentMapping);
     setArrayOfLines(copyOfArrayOfLines);
     setCurrentLineNumber(currentLineNumber + 1);
+    setCurrentColumnNumber(0);
     setNumberOfLines(numberOfLines + 1);
   };
 
@@ -81,6 +82,37 @@ export function App() {
     copyOfKeyContentMapping.set(uid, content);
     setKeyContentMapping(copyOfKeyContentMapping);
   };
+  const moveByLines = (numberOfLinesToMove: number) => {
+    const resultantLineNumberAfterMovement =
+      currentLineNumber + numberOfLinesToMove;
+
+    if (
+      resultantLineNumberAfterMovement <= 0 ||
+      resultantLineNumberAfterMovement > numberOfLines
+    ) {
+      return;
+    } else {
+      if (numberOfLinesToMove < 0) {
+        // left arrow key was pressed
+        // set the current column number to the length of the line where the caret is finally moving to.
+        // this is because we want to set the caret to the end of the line on press of left arrow key.
+
+        setCurrentColumnNumber(
+          keyContentMapping.get(
+            arrayOfLines[resultantLineNumberAfterMovement - 1]
+          ).length
+        );
+      } else {
+        // right arrow key was pressed
+        // set the current column number to the beginning of the line where the caret is finally moving to.
+        // this is because we want to set the caret to the end of the line on press of left arrow key.
+        setCurrentColumnNumber(0);
+      }
+
+      // finally set the line number to the newly calculated line number
+      setCurrentLineNumber(resultantLineNumberAfterMovement);
+    }
+  };
   return (
     <>
       <div id="container">
@@ -98,6 +130,7 @@ export function App() {
               focussedLine={index === currentLineNumber - 1}
               key={key}
               onChange={handleOnChange}
+              moveByLines={moveByLines}
             />
           );
         })}

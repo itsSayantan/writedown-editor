@@ -114,6 +114,25 @@ export function Line(props: LineProps) {
         props.setCurrentLineNumber(props.id + 1);
         break;
       }
+      case "ArrowLeft": {
+        if (caretPosition === 0) {
+          props.moveByLines(-1);
+        } else {
+          setCaretPosition(caretPosition - 1);
+          props.setCurrentColumnNumber(caretPosition - 1);
+        }
+        break;
+      }
+      case "ArrowRight": {
+        debugger;
+        if (caretPosition === content.length) {
+          props.moveByLines(1);
+        } else {
+          setCaretPosition(caretPosition + 1);
+          props.setCurrentColumnNumber(caretPosition + 1);
+        }
+        break;
+      }
       default: {
         const { beforeContent, afterContent } = getContent(
           0,
