@@ -69,9 +69,10 @@ export function App() {
         copyOfArrayOfLines.findIndex(e => e === currentUid),
         1
       );
-
       setKeyContentMapping(copyOfKeyContentMapping);
       setArrayOfLines(copyOfArrayOfLines);
+      setCurrentColumnNumber(keyContentMapping.get(previousUid).length + 1);
+      setNumberOfLines(numberOfLines - 1);
       setCurrentLineNumber(currentLineNumber - 1);
     } else {
       console.log("something broke");
@@ -131,6 +132,7 @@ export function App() {
               key={key}
               onChange={handleOnChange}
               moveByLines={moveByLines}
+              currentColumnNumber={currentColumnNumber}
             />
           );
         })}

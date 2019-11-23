@@ -6,7 +6,6 @@ import "./style.scss";
 
 export function Line(props: LineProps) {
   const [content, setContent] = React.useState("");
-  const [caretPosition, setCaretPosition] = React.useState(1);
   const ref: React.MutableRefObject<HTMLDivElement> = React.useRef();
 
   React.useEffect(() => {
@@ -37,16 +36,16 @@ export function Line(props: LineProps) {
   }, [props.content]);
 
   const getContent = (
-    startingIndexOfTheStringBeforeCaret: number,
-    numberOfCharactersOfTheStringBeforeCaret: number,
-    startingIndexOfTheStringAfterCaret: number
+    startingIndexOfTheStringBeforeCursor: number,
+    numberOfCharactersOfTheStringBeforeCursor: number,
+    startingIndexOfTheStringAfterCursor: number
   ) => {
     return {
       beforeContent: content.substring(
-        startingIndexOfTheStringBeforeCaret,
-        numberOfCharactersOfTheStringBeforeCaret
+        startingIndexOfTheStringBeforeCursor,
+        numberOfCharactersOfTheStringBeforeCursor
       ),
-      afterContent: content.substring(startingIndexOfTheStringAfterCaret)
+      afterContent: content.substring(startingIndexOfTheStringAfterCursor)
     };
   };
 
@@ -58,8 +57,8 @@ export function Line(props: LineProps) {
       case "Enter": {
         const { beforeContent, afterContent } = getContent(
           0,
-          caretPosition - 1,
-          caretPosition - 1
+          props.currentColumnNumber - 1,
+          props.currentColumnNumber - 1
         );
         props.onNewLine(props.uid, beforeContent, afterContent);
         break;
@@ -67,10 +66,10 @@ export function Line(props: LineProps) {
       case "Backspace": {
         const { beforeContent, afterContent } = getContent(
           0,
-          caretPosition - 2,
-          caretPosition - 1
+          props.currentColumnNumber - 2,
+          props.currentColumnNumber - 1
         );
-        if (caretPosition === 1) {
+        if (props.currentColumnNumber === 1) {
           // The line needs to be deleted at this stage.
           // The remaining content in this line needs to be appended to the preceeding line if there is one
           const { previousElementSibling } = ref.current;
@@ -84,22 +83,22 @@ export function Line(props: LineProps) {
         } else {
           // The line need not be deleted at this stage.
           setContent(beforeContent + afterContent);
-          setCaretPosition(!caretPosition ? 1 : caretPosition - 1);
-          props.setCurrentColumnNumber(!caretPosition ? 1 : caretPosition - 1);
+          props.setCurrentColumnNumber(
+            !props.currentColumnNumber ? 1 : props.currentColumnNumber - 1
+          );
         }
         break;
       }
       case "Tab": {
         const { beforeContent, afterContent } = getContent(
           0,
-          caretPosition - 1,
-          caretPosition - 1
+          props.currentColumnNumber - 1,
+          props.currentColumnNumber - 1
         );
         const w = beforeContent + "    " + afterContent;
 
         setContent(w);
-        setCaretPosition(caretPosition + 4);
-        props.setCurrentColumnNumber(caretPosition + 4);
+        props.setCurrentColumnNumber(props.currentColumnNumber + 4);
         break;
       }
       case "ArrowUp": {
@@ -113,40 +112,36 @@ export function Line(props: LineProps) {
         break;
       }
       case "ArrowLeft": {
-        if (caretPosition === 1) {
+        if (props.currentColumnNumber === 1) {
           props.moveByLines(-1);
         } else {
-          setCaretPosition(caretPosition - 1);
-          props.setCurrentColumnNumber(caretPosition - 1);
+          props.setCurrentColumnNumber(props.currentColumnNumber - 1);
         }
         break;
       }
       case "ArrowRight": {
-        if (caretPosition === content.length + 1) {
+        if (props.currentColumnNumber === content.length + 1) {
           props.moveByLines(1);
         } else {
-          setCaretPosition(caretPosition + 1);
-          props.setCurrentColumnNumber(caretPosition + 1);
+          props.setCurrentColumnNumber(props.currentColumnNumber + 1);
         }
         break;
       }
       default: {
         const { beforeContent, afterContent } = getContent(
           0,
-          caretPosition,
-          caretPosition
+          props.currentColumnNumber,
+          props.currentColumnNumber
         );
 
         setContent(beforeContent + ev.key + afterContent);
-        setCaretPosition(caretPosition + 1);
-        props.setCurrentColumnNumber(caretPosition + 1);
+        props.setCurrentColumnNumber(props.currentColumnNumber + 1);
       }
     }
   };
 
   const handleClick = (ev: React.MouseEvent<HTMLDivElement>) => {
     const selection = window.getSelection();
-    setCaretPosition(selection.focusOffset + 1);
     props.setCurrentLineNumber(props.id);
     props.setCurrentColumnNumber(selection.focusOffset + 1);
   };
