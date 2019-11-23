@@ -29,7 +29,11 @@ module.exports = {
     disableHostCheck: true,
     port: 8080,
     compress: true,
-    hot: true
+    hot: true,
+    overlay: {
+      errors: true,
+      warnings: true
+    }
   },
   module: {
     rules: [
