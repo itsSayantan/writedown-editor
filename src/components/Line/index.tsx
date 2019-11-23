@@ -1,23 +1,24 @@
 import React from "react";
 
 import { LineProps } from "./model";
+import { WriteDownEditorActions } from "@Components/WriteDownEditorCore/actions";
 
 import "./style.scss";
 
 export function Line(props: LineProps) {
-  const [content, setContent] = React.useState("");
   const ref: React.MutableRefObject<HTMLDivElement> = React.useRef();
 
   React.useEffect(() => {
     if (props.focussedLine) {
       ref?.current?.focus();
-      props.setCurrentLineNumber(props.id);
+      props.dispatch({
+        type: WriteDownEditorActions.ON_UPDATE_CURRENT_LINE_NUMBER,
+        payload: {
+          currentLineNumber: props.id
+        }
+      });
     }
   }, [props.focussedLine]);
-
-  React.useEffect(() => {
-    props.onChange(props.uid, content);
-  }, [content, props.uid]);
 
   React.useEffect(() => {
     if (props.focussedLine) {
@@ -27,13 +28,7 @@ export function Line(props: LineProps) {
         inline: "end"
       });
     }
-  }, [props.focussedLine, content]);
-
-  React.useEffect(() => {
-    if (props.content) {
-      setContent(props.content);
-    }
-  }, [props.content]);
+  }, [props.focussedLine, props.content]);
 
   const getContent = (
     startingIndexOfTheStringBeforeCursor: number,
@@ -41,11 +36,11 @@ export function Line(props: LineProps) {
     startingIndexOfTheStringAfterCursor: number
   ) => {
     return {
-      beforeContent: content.substring(
+      beforeContent: props.content.substring(
         startingIndexOfTheStringBeforeCursor,
         numberOfCharactersOfTheStringBeforeCursor
       ),
-      afterContent: content.substring(startingIndexOfTheStringAfterCursor)
+      afterContent: props.content.substring(startingIndexOfTheStringAfterCursor)
     };
   };
 
@@ -60,7 +55,14 @@ export function Line(props: LineProps) {
           props.currentColumnNumber - 1,
           props.currentColumnNumber - 1
         );
-        props.onNewLine(props.uid, beforeContent, afterContent);
+        props.dispatch({
+          type: WriteDownEditorActions.ON_NEW_LINE,
+          payload: {
+            uid: props.uid,
+            beforeContent,
+            remainingLine: afterContent
+          }
+        });
         break;
       }
       case "Backspace": {
@@ -74,18 +76,32 @@ export function Line(props: LineProps) {
           // The remaining content in this line needs to be appended to the preceeding line if there is one
           const { previousElementSibling } = ref.current;
           if (previousElementSibling) {
-            props.deleteLine(
-              previousElementSibling.id,
-              props.uid,
-              afterContent
-            );
+            props.dispatch({
+              type: WriteDownEditorActions.ON_DELETE_LINE,
+              payload: {
+                contentToBeAppendedToThePreviousLine: afterContent,
+                currentUid: props.uid,
+                previousUid: previousElementSibling.id
+              }
+            });
           }
         } else {
           // The line need not be deleted at this stage.
-          setContent(beforeContent + afterContent);
-          props.setCurrentColumnNumber(
-            !props.currentColumnNumber ? 1 : props.currentColumnNumber - 1
-          );
+          props.dispatch({
+            type: WriteDownEditorActions.ON_CONTENT_CHANGE,
+            payload: {
+              uid: props.uid,
+              content: beforeContent + afterContent
+            }
+          });
+          props.dispatch({
+            type: WriteDownEditorActions.ON_UPDATE_CURRENT_COLUMN_NUMBER,
+            payload: {
+              currentColumnNumber: !props.currentColumnNumber
+                ? 1
+                : props.currentColumnNumber - 1
+            }
+          });
         }
         break;
       }
@@ -95,55 +111,116 @@ export function Line(props: LineProps) {
           props.currentColumnNumber - 1,
           props.currentColumnNumber - 1
         );
-        const w = beforeContent + "    " + afterContent;
 
-        setContent(w);
-        props.setCurrentColumnNumber(props.currentColumnNumber + 4);
+        props.dispatch({
+          type: WriteDownEditorActions.ON_CONTENT_CHANGE,
+          payload: {
+            uid: props.uid,
+            content: beforeContent + "    " + afterContent
+          }
+        });
+        props.dispatch({
+          type: WriteDownEditorActions.ON_UPDATE_CURRENT_COLUMN_NUMBER,
+          payload: {
+            currentColumnNumber: props.currentColumnNumber + 4
+          }
+        });
         break;
       }
       case "ArrowUp": {
         if (props.id === 1) return;
-        props.setCurrentLineNumber(props.id - 1);
+        props.dispatch({
+          type: WriteDownEditorActions.ON_UPDATE_CURRENT_LINE_NUMBER,
+          payload: {
+            currentLineNumber: props.id - 1
+          }
+        });
         break;
       }
       case "ArrowDown": {
         if (props.id === props.numberOfLines) return;
-        props.setCurrentLineNumber(props.id + 1);
+        props.dispatch({
+          type: WriteDownEditorActions.ON_UPDATE_CURRENT_LINE_NUMBER,
+          payload: {
+            currentLineNumber: props.id + 1
+          }
+        });
         break;
       }
       case "ArrowLeft": {
         if (props.currentColumnNumber === 1) {
-          props.moveByLines(-1);
+          props.dispatch({
+            type: WriteDownEditorActions.ON_MOVE_BY_LINE,
+            payload: {
+              numberOfLinesToMove: -1
+            }
+          });
         } else {
-          props.setCurrentColumnNumber(props.currentColumnNumber - 1);
+          props.dispatch({
+            type: WriteDownEditorActions.ON_UPDATE_CURRENT_COLUMN_NUMBER,
+            payload: {
+              currentColumnNumber: props.currentColumnNumber - 1
+            }
+          });
         }
         break;
       }
       case "ArrowRight": {
-        if (props.currentColumnNumber === content.length + 1) {
-          props.moveByLines(1);
+        if (props.currentColumnNumber === props.content.length + 1) {
+          props.dispatch({
+            type: WriteDownEditorActions.ON_MOVE_BY_LINE,
+            payload: {
+              numberOfLinesToMove: 1
+            }
+          });
         } else {
-          props.setCurrentColumnNumber(props.currentColumnNumber + 1);
+          props.dispatch({
+            type: WriteDownEditorActions.ON_UPDATE_CURRENT_COLUMN_NUMBER,
+            payload: {
+              currentColumnNumber: props.currentColumnNumber + 1
+            }
+          });
         }
         break;
       }
       default: {
         const { beforeContent, afterContent } = getContent(
           0,
-          props.currentColumnNumber,
-          props.currentColumnNumber
+          props.currentColumnNumber - 1,
+          props.currentColumnNumber - 1
         );
 
-        setContent(beforeContent + ev.key + afterContent);
-        props.setCurrentColumnNumber(props.currentColumnNumber + 1);
+        props.dispatch({
+          type: WriteDownEditorActions.ON_CONTENT_CHANGE,
+          payload: {
+            uid: props.uid,
+            content: beforeContent + ev.key + afterContent
+          }
+        });
+        props.dispatch({
+          type: WriteDownEditorActions.ON_UPDATE_CURRENT_COLUMN_NUMBER,
+          payload: {
+            currentColumnNumber: props.currentColumnNumber + 1
+          }
+        });
       }
     }
   };
 
   const handleClick = (ev: React.MouseEvent<HTMLDivElement>) => {
     const selection = window.getSelection();
-    props.setCurrentLineNumber(props.id);
-    props.setCurrentColumnNumber(selection.focusOffset + 1);
+    props.dispatch({
+      type: WriteDownEditorActions.ON_UPDATE_CURRENT_LINE_NUMBER,
+      payload: {
+        currentLineNumber: props.id
+      }
+    });
+    props.dispatch({
+      type: WriteDownEditorActions.ON_UPDATE_CURRENT_COLUMN_NUMBER,
+      payload: {
+        currentColumnNumber: selection.focusOffset + 1
+      }
+    });
   };
 
   return (
@@ -151,7 +228,7 @@ export function Line(props: LineProps) {
       ref={ref}
       className={`line-wrapper ${props.focussedLine ? "focus" : ""}`}
       id={props.uid}
-      dangerouslySetInnerHTML={{ __html: content }}
+      dangerouslySetInnerHTML={{ __html: props.content }}
       onKeyDown={handleKeyDown}
       onClick={handleClick}
       tabIndex={props.id}
