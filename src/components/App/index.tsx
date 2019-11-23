@@ -8,7 +8,7 @@ import "./style.scss";
 export function App() {
   const [numberOfLines, setNumberOfLines] = React.useState(1);
   const [currentLineNumber, setCurrentLineNumber] = React.useState(1);
-  const [currentColumnNumber, setCurrentColumnNumber] = React.useState(0);
+  const [currentColumnNumber, setCurrentColumnNumber] = React.useState(1);
 
   const uid = uuid4.default();
   const [arrayOfLines, setArrayOfLines] = React.useState<string[]>([uid]);
@@ -40,7 +40,7 @@ export function App() {
     setKeyContentMapping(copyOfKeyContentMapping);
     setArrayOfLines(copyOfArrayOfLines);
     setCurrentLineNumber(currentLineNumber + 1);
-    setCurrentColumnNumber(0);
+    setCurrentColumnNumber(1);
     setNumberOfLines(numberOfLines + 1);
   };
 
@@ -100,13 +100,13 @@ export function App() {
         setCurrentColumnNumber(
           keyContentMapping.get(
             arrayOfLines[resultantLineNumberAfterMovement - 1]
-          ).length
+          ).length + 1
         );
       } else {
         // right arrow key was pressed
         // set the current column number to the beginning of the line where the caret is finally moving to.
         // this is because we want to set the caret to the end of the line on press of left arrow key.
-        setCurrentColumnNumber(0);
+        setCurrentColumnNumber(1);
       }
 
       // finally set the line number to the newly calculated line number

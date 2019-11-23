@@ -6,7 +6,7 @@ import "./style.scss";
 
 export function Line(props: LineProps) {
   const [content, setContent] = React.useState("");
-  const [caretPosition, setCaretPosition] = React.useState(0);
+  const [caretPosition, setCaretPosition] = React.useState(1);
   const ref: React.MutableRefObject<HTMLDivElement> = React.useRef();
 
   React.useEffect(() => {
@@ -38,13 +38,13 @@ export function Line(props: LineProps) {
 
   const getContent = (
     startingIndexOfTheStringBeforeCaret: number,
-    endingIndexOfTheStringBeforeCaret: number,
+    numberOfCharactersOfTheStringBeforeCaret: number,
     startingIndexOfTheStringAfterCaret: number
   ) => {
     return {
       beforeContent: content.substring(
         startingIndexOfTheStringBeforeCaret,
-        endingIndexOfTheStringBeforeCaret
+        numberOfCharactersOfTheStringBeforeCaret
       ),
       afterContent: content.substring(startingIndexOfTheStringAfterCaret)
     };
@@ -58,8 +58,8 @@ export function Line(props: LineProps) {
       case "Enter": {
         const { beforeContent, afterContent } = getContent(
           0,
-          caretPosition,
-          caretPosition
+          caretPosition - 1,
+          caretPosition - 1
         );
         props.onNewLine(props.uid, beforeContent, afterContent);
         break;
@@ -67,14 +67,12 @@ export function Line(props: LineProps) {
       case "Backspace": {
         const { beforeContent, afterContent } = getContent(
           0,
-          caretPosition - 1,
-          caretPosition
+          caretPosition - 2,
+          caretPosition - 1
         );
-
-        if (caretPosition === 0) {
+        if (caretPosition === 1) {
           // The line needs to be deleted at this stage.
           // The remaining content in this line needs to be appended to the preceeding line if there is one
-          // props.deleteLine(ref.current.previousSib,props.uid, afterContent);
           const { previousElementSibling } = ref.current;
           if (previousElementSibling) {
             props.deleteLine(
@@ -86,16 +84,16 @@ export function Line(props: LineProps) {
         } else {
           // The line need not be deleted at this stage.
           setContent(beforeContent + afterContent);
-          setCaretPosition(!caretPosition ? 0 : caretPosition - 1);
-          props.setCurrentColumnNumber(!caretPosition ? 0 : caretPosition - 1);
+          setCaretPosition(!caretPosition ? 1 : caretPosition - 1);
+          props.setCurrentColumnNumber(!caretPosition ? 1 : caretPosition - 1);
         }
         break;
       }
       case "Tab": {
         const { beforeContent, afterContent } = getContent(
           0,
-          caretPosition,
-          caretPosition
+          caretPosition - 1,
+          caretPosition - 1
         );
         const w = beforeContent + "    " + afterContent;
 
@@ -115,7 +113,7 @@ export function Line(props: LineProps) {
         break;
       }
       case "ArrowLeft": {
-        if (caretPosition === 0) {
+        if (caretPosition === 1) {
           props.moveByLines(-1);
         } else {
           setCaretPosition(caretPosition - 1);
@@ -124,7 +122,7 @@ export function Line(props: LineProps) {
         break;
       }
       case "ArrowRight": {
-        if (caretPosition === content.length) {
+        if (caretPosition === content.length + 1) {
           props.moveByLines(1);
         } else {
           setCaretPosition(caretPosition + 1);
@@ -148,9 +146,9 @@ export function Line(props: LineProps) {
 
   const handleClick = (ev: React.MouseEvent<HTMLDivElement>) => {
     const selection = window.getSelection();
-    setCaretPosition(selection.focusOffset);
+    setCaretPosition(selection.focusOffset + 1);
     props.setCurrentLineNumber(props.id);
-    props.setCurrentColumnNumber(selection.focusOffset);
+    props.setCurrentColumnNumber(selection.focusOffset + 1);
   };
 
   return (
