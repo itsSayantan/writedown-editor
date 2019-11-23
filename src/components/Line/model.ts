@@ -14,4 +14,5 @@ export type LineProps = {
   focussedLine: boolean;
   onChange: (uid: string, content: string) => void;
   moveByLines: (numberOfLines: number) => void;
+  currentColumnNumber: number;
 };
