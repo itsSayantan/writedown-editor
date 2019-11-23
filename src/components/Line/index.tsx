@@ -124,7 +124,6 @@ export function Line(props: LineProps) {
         break;
       }
       case "ArrowRight": {
-        debugger;
         if (caretPosition === content.length) {
           props.moveByLines(1);
         } else {
