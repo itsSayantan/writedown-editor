@@ -7,13 +7,11 @@ export type WriteDownEditorCoreStateType = {
 };
 export type DispatchType = {
   type: number;
-  payload:
+  payload?:
     | OnContentChangeType
     | OnDeleteLineType
     | OnNewLineType
     | OnMoveByLineType
-    | OnArrowKeyUp
-    | OnArrowKeyDown
     | OnUpdateCurrentColumnNumber
     | OnUpdateCurrentLineNumber;
 };
@@ -31,14 +29,6 @@ export type OnNewLineType = {
 };
 export type OnMoveByLineType = {
   numberOfLinesToMove: number;
-};
-
-export type OnArrowKeyUp = {
-  uid: string;
-};
-
-export type OnArrowKeyDown = {
-  uid: string;
 };
 
 export type OnUpdateCurrentLineNumber = {

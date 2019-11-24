@@ -7,8 +7,7 @@ import {
   OnNewLineType,
   OnMoveByLineType,
   OnUpdateCurrentLineNumber,
-  OnUpdateCurrentColumnNumber,
-  OnArrowKeyUp
+  OnUpdateCurrentColumnNumber
 } from "./model";
 import { WriteDownEditorActions } from "./actions";
 
@@ -55,12 +54,10 @@ export function reducer(state: State, action: DispatchType): State {
       return moveByLines(state, numberOfLinesToMove);
     }
     case ON_ARROW_KEY_UP: {
-      const { uid } = action.payload as OnArrowKeyUp;
-      return arrowKeyUpHandler(state, uid);
+      return arrowKeyUpHandler(state);
     }
     case ON_ARROW_KEY_DOWN: {
-      const { uid } = action.payload as OnArrowKeyUp;
-      return arrowKeyDownHandler(state, uid);
+      return arrowKeyDownHandler(state);
     }
     case ON_UPDATE_CURRENT_LINE_NUMBER: {
       const { currentLineNumber } = action.payload as OnUpdateCurrentLineNumber;
@@ -198,7 +195,7 @@ function moveByLines(state: State, numberOfLinesToMove: number): State {
   }
 }
 
-function arrowKeyUpHandler(state: State, uid: string) {
+function arrowKeyUpHandler(state: State): State {
   const newState = { ...state };
 
   if (newState.currentLineNumber > 1) {
@@ -220,7 +217,7 @@ function arrowKeyUpHandler(state: State, uid: string) {
   return newState;
 }
 
-function arrowKeyDownHandler(state: State, uid: string) {
+function arrowKeyDownHandler(state: State): State {
   const newState = { ...state };
 
   if (newState.currentLineNumber < newState.numberOfLines) {
