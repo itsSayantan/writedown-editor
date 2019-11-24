@@ -12,7 +12,7 @@ export function App() {
   let fromLeft = 0;
   const canvasRef: React.MutableRefObject<HTMLCanvasElement> = React.useRef();
 
-  if (canvasRef) {
+  if (canvasRef.current) {
     const ctx = canvasRef.current.getContext("2d");
     ctx.font = "14px Roboto";
     const metrics = ctx.measureText(
