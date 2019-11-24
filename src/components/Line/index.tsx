@@ -130,9 +130,9 @@ export function Line(props: LineProps) {
       case "ArrowUp": {
         if (props.id === 1) return;
         props.dispatch({
-          type: WriteDownEditorActions.ON_UPDATE_CURRENT_LINE_NUMBER,
+          type: WriteDownEditorActions.ON_ARROW_KEY_UP,
           payload: {
-            currentLineNumber: props.id - 1
+            uid: props.uid
           }
         });
         break;
@@ -140,9 +140,9 @@ export function Line(props: LineProps) {
       case "ArrowDown": {
         if (props.id === props.numberOfLines) return;
         props.dispatch({
-          type: WriteDownEditorActions.ON_UPDATE_CURRENT_LINE_NUMBER,
+          type: WriteDownEditorActions.ON_ARROW_KEY_DOWN,
           payload: {
-            currentLineNumber: props.id + 1
+            uid: props.uid
           }
         });
         break;
