@@ -45,7 +45,7 @@ export function Line(props: LineProps) {
   };
 
   const handleKeyDown = (ev: React.KeyboardEvent<HTMLDivElement>) => {
-    ev.preventDefault();
+    if (ev?.key === "Tab") ev.preventDefault();
     const key = ev.key;
 
     switch (key) {
@@ -178,25 +178,27 @@ export function Line(props: LineProps) {
         break;
       }
       default: {
-        const { beforeContent, afterContent } = getContent(
-          0,
-          props.currentColumnNumber - 1,
-          props.currentColumnNumber - 1
-        );
+        if (ev.key.length === 1) {
+          const { beforeContent, afterContent } = getContent(
+            0,
+            props.currentColumnNumber - 1,
+            props.currentColumnNumber - 1
+          );
 
-        props.dispatch({
-          type: WriteDownEditorActions.ON_CONTENT_CHANGE,
-          payload: {
-            uid: props.uid,
-            content: beforeContent + ev.key + afterContent
-          }
-        });
-        props.dispatch({
-          type: WriteDownEditorActions.ON_UPDATE_CURRENT_COLUMN_NUMBER,
-          payload: {
-            currentColumnNumber: props.currentColumnNumber + 1
-          }
-        });
+          props.dispatch({
+            type: WriteDownEditorActions.ON_CONTENT_CHANGE,
+            payload: {
+              uid: props.uid,
+              content: beforeContent + ev.key + afterContent
+            }
+          });
+          props.dispatch({
+            type: WriteDownEditorActions.ON_UPDATE_CURRENT_COLUMN_NUMBER,
+            payload: {
+              currentColumnNumber: props.currentColumnNumber + 1
+            }
+          });
+        }
       }
     }
   };
