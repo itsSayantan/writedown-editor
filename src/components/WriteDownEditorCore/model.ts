@@ -7,7 +7,7 @@ export type WriteDownEditorCoreStateType = {
 };
 export type DispatchType = {
   type: number;
-  payload:
+  payload?:
     | OnContentChangeType
     | OnDeleteLineType
     | OnNewLineType
