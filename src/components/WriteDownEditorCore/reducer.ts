@@ -7,7 +7,8 @@ import {
   OnNewLineType,
   OnMoveByLineType,
   OnUpdateCurrentLineNumber,
-  OnUpdateCurrentColumnNumber
+  OnUpdateCurrentColumnNumber,
+  OnArrowKeyUp
 } from "./model";
 import { WriteDownEditorActions } from "./actions";
 
@@ -16,6 +17,8 @@ const {
   ON_DELETE_LINE,
   ON_NEW_LINE,
   ON_MOVE_BY_LINE,
+  ON_ARROW_KEY_UP,
+  ON_ARROW_KEY_DOWN,
   ON_UPDATE_CURRENT_LINE_NUMBER,
   ON_UPDATE_CURRENT_COLUMN_NUMBER
 } = WriteDownEditorActions;
@@ -50,6 +53,14 @@ export function reducer(state: State, action: DispatchType): State {
     case ON_MOVE_BY_LINE: {
       const { numberOfLinesToMove } = action.payload as OnMoveByLineType;
       return moveByLines(state, numberOfLinesToMove);
+    }
+    case ON_ARROW_KEY_UP: {
+      const { uid } = action.payload as OnArrowKeyUp;
+      return arrowKeyUpHandler(state, uid);
+    }
+    case ON_ARROW_KEY_DOWN: {
+      const { uid } = action.payload as OnArrowKeyUp;
+      return arrowKeyDownHandler(state, uid);
     }
     case ON_UPDATE_CURRENT_LINE_NUMBER: {
       const { currentLineNumber } = action.payload as OnUpdateCurrentLineNumber;
@@ -185,4 +196,48 @@ function moveByLines(state: State, numberOfLinesToMove: number): State {
     newState.currentLineNumber = resultantLineNumberAfterMovement;
     return newState;
   }
+}
+
+function arrowKeyUpHandler(state: State, uid: string) {
+  const newState = { ...state };
+
+  if (newState.currentLineNumber > 1) {
+    // Need to hanle only this scenario as we dont want the cursor position to change when the currentLineNumber is 1.
+
+    // If the line above has equal to or more characters than the current line dont change the column number
+    // else change the column number to the end of the previous line.
+    // Decrease the current line number by 1
+
+    const previousLineLength = newState.keyContentMapping.get(
+      newState.arrayOfLines[newState.currentLineNumber - 2]
+    ).length;
+    if (previousLineLength < newState.currentColumnNumber) {
+      newState.currentColumnNumber = previousLineLength + 1;
+    }
+
+    newState.currentLineNumber -= 1;
+  }
+  return newState;
+}
+
+function arrowKeyDownHandler(state: State, uid: string) {
+  const newState = { ...state };
+
+  if (newState.currentLineNumber < newState.numberOfLines) {
+    // Need to hanle only this scenario as we dont want the cursor position to change when it is at the last line.
+
+    // If the line below has equal to or more characters than the current line dont change the column number
+    // else change the column number to the end of the next line.
+    // Increase the current line number by 1
+
+    const nextLineLength = newState.keyContentMapping.get(
+      newState.arrayOfLines[newState.currentLineNumber]
+    ).length;
+    if (nextLineLength < newState.currentColumnNumber) {
+      newState.currentColumnNumber = nextLineLength + 1;
+    }
+
+    newState.currentLineNumber += 1;
+  }
+  return newState;
 }
