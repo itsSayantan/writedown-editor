@@ -227,7 +227,7 @@ export function Line(props: LineProps) {
     <div
       ref={ref}
       className={`line-wrapper ${props.focussedLine ? "focus" : ""}`}
-      id={"_" + props.uid}
+      id={props.uid}
       dangerouslySetInnerHTML={{ __html: props.content }}
       onKeyDown={handleKeyDown}
       onClick={handleClick}

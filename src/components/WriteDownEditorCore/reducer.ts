@@ -93,7 +93,7 @@ function deleteLineHandler(
   contentToBeAppendedToThePreviousLine: string
 ): State {
   const keyContentMapping = new Map(state.keyContentMapping.entries());
-
+  const currentColumnNumber = keyContentMapping.get(previousUid).length + 1;
   if (keyContentMapping.has(currentUid)) {
     // Found the uid in the mapping.
     // Append the remaining content of the current line
@@ -116,7 +116,7 @@ function deleteLineHandler(
       ...state,
       keyContentMapping,
       arrayOfLines,
-      currentColumnNumber: keyContentMapping.get(previousUid).length + 1,
+      currentColumnNumber,
       numberOfLines: state.numberOfLines - 1,
       currentLineNumber: state.currentLineNumber - 1
     };
@@ -138,7 +138,7 @@ function newLineHandler(
     arrayOfLines[i + 1] = arrayOfLines[i];
   }
 
-  arrayOfLines[state.currentLineNumber] = uuid4.default();
+  arrayOfLines[state.currentLineNumber] = "_" + uuid4.default(); // This string will be used as id of dom element
 
   const keyContentMapping = new Map(state.keyContentMapping.entries());
   keyContentMapping.set(uid, beforeContent);

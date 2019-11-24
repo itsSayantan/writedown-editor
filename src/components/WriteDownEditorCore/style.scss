@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
 #container {
   width: 500px;
   height: 500px;
@@ -8,9 +9,8 @@
   > .cursor {
     position: absolute;
     width: 1.6666px;
-    height: 14px;
+    height: 20px;
     background-color: black;
-    top: 0px;
   }
 }
 canvas {
