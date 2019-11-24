@@ -1,7 +1,18 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
 #container {
   width: 500px;
   height: 500px;
   margin: auto;
   background-color: aliceblue;
   overflow: auto;
+  position: relative;
+  > .cursor {
+    position: absolute;
+    width: 1.6666px;
+    height: 20px;
+    background-color: black;
+  }
+}
+canvas {
+  display: none;
 }
