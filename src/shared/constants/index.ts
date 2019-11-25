@@ -1,4 +1,4 @@
 export enum EDITOR_VALUE {
-  paddingTopBottom = 6,
+  paddingTopBottom = 12,
   heightOfEachLine = 14
 }
