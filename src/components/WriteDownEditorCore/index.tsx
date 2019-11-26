@@ -6,10 +6,11 @@ import { getDefaultValues } from "./factory";
 
 import "./style.scss";
 import { reducer } from "./reducer";
+import { WriteDownEditorProps } from "./model";
 import { EDITOR_VALUE } from "@Shared/constants";
 import { Cursor } from "@Components/Cursor";
 
-export function App() {
+export function WriteDownEditor(props: WriteDownEditorProps) {
   const [state, dispatch] = React.useReducer(reducer, getDefaultValues());
   const canvasRef: React.MutableRefObject<HTMLCanvasElement> = React.useRef();
 
@@ -31,7 +32,13 @@ export function App() {
   }
   return (
     <>
-      <div id="container">
+      <div
+        id="container"
+        style={{
+          backgroundColor: props?.options?.editorBackground,
+          color: props?.options?.editorForeground
+        }}
+      >
         {state.arrayOfLines.map((key, index) => {
           return (
             <Line
@@ -43,10 +50,20 @@ export function App() {
               focussedLine={index === state.currentLineNumber - 1}
               key={key}
               currentColumnNumber={state.currentColumnNumber}
+              styles={{
+                lineBackground: props?.options?.lineBackground,
+                lineForeground: props?.options?.lineForeground,
+                focussedLineBackground: props?.options?.focussedLineBackground,
+                focussedLineForeground: props?.options?.focussedLineForeground
+              }}
             />
           );
         })}
-        <Cursor fromTop={fromTop} fromLeft={fromLeft} />
+        <Cursor
+          fromTop={fromTop}
+          fromLeft={fromLeft}
+          styles={{ cursorColor: props?.options?.cursorColor }}
+        />
       </div>
       <div>
         Ln {state.currentLineNumber}, Col {state.currentColumnNumber}

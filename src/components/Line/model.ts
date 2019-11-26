@@ -8,4 +8,10 @@ export type LineProps = {
   focussedLine: boolean;
   currentColumnNumber: number;
   dispatch: React.Dispatch<DispatchType>;
+  styles: {
+    lineBackground: string;
+    lineForeground: string;
+    focussedLineBackground: string;
+    focussedLineForeground: string;
+  };
 };

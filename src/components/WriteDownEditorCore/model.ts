@@ -37,3 +37,15 @@ export type OnUpdateCurrentLineNumber = {
 export type OnUpdateCurrentColumnNumber = {
   currentColumnNumber: number;
 };
+
+export type WriteDownEditorProps = {
+  options: {
+    lineBackground: string;
+    lineForeground: string;
+    focussedLineBackground: string;
+    focussedLineForeground: string;
+    editorBackground: string;
+    editorForeground: string;
+    cursorColor: string;
+  };
+};

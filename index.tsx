@@ -1,9 +1,19 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { App } from "@Components/WriteDownEditorCore";
+import { WriteDownEditor } from "@Components/WriteDownEditorCore";
+
+const options = {
+  lineBackground: "black",
+  lineForeground: "white",
+  focussedLineBackground: "white",
+  focussedLineForeground: "black",
+  editorBackground: "blue",
+  editorForeground: "white",
+  cursorColor: "rgba(255,0,0,1)"
+};
 
 function Main() {
-  return <App />;
+  return <WriteDownEditor options={options} />;
 }
 
 ReactDOM.render(<Main />, document.querySelector("#root"));

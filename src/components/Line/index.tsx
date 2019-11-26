@@ -228,6 +228,17 @@ export function Line(props: LineProps) {
       onKeyDown={handleKeyDown}
       onClick={handleClick}
       tabIndex={props.id}
+      style={
+        props?.focussedLine
+          ? {
+              backgroundColor: props?.styles?.lineBackground,
+              color: props?.styles?.lineForeground
+            }
+          : {
+              backgroundColor: props?.styles?.focussedLineBackground,
+              color: props?.styles?.focussedLineForeground
+            }
+      }
     ></div>
   );
 }

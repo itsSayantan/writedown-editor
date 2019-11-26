@@ -1,0 +1,10 @@
+export declare enum WriteDownEditorActions {
+    ON_NEW_LINE = 0,
+    ON_DELETE_LINE = 1,
+    ON_CONTENT_CHANGE = 2,
+    ON_MOVE_BY_LINE = 3,
+    ON_ARROW_KEY_UP = 4,
+    ON_ARROW_KEY_DOWN = 5,
+    ON_UPDATE_CURRENT_LINE_NUMBER = 6,
+    ON_UPDATE_CURRENT_COLUMN_NUMBER = 7
+}
