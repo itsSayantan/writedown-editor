@@ -1,13 +1,15 @@
 .line-wrapper {
-  font-family: "Roboto", sans-serif;
+  font-family: "Ubuntu", sans-serif;
   width: 100%;
   height: 14px;
   font-size: 14px;
-  padding: 3px 0;
+  padding: 6px 0;
   white-space: pre;
   min-width: fit-content;
+  color: #cdcdcd;
   &.focus {
-    background-color: bisque;
+    color: #333444;
+    background-color: #8d8f9e;
   }
   &:focus {
     outline: none;

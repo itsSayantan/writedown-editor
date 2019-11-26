@@ -18,7 +18,7 @@ export function App() {
 
   if (canvasRef.current) {
     const ctx = canvasRef.current.getContext("2d");
-    ctx.font = "14px Roboto";
+    ctx.font = "14px Ubuntu";
     const metrics = ctx.measureText(
       state.keyContentMapping
         .get(state.arrayOfLines[state.currentLineNumber - 1])
