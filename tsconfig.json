@@ -14,11 +14,13 @@
     "moduleResolution": "node", // to import module in node's style (w/o specifying file format)
     "downlevelIteration": true,
     "baseUrl": "src",
+    "outDir": "./dist",
     "paths": {
       "@Components/*": ["components/*"],
       "@Shared/*": ["shared/*"]
     },
-    "declaration": true
+    "declaration": true,
+    "skipLibCheck": true
   },
   "include": ["./**/*"],
   "exclude": ["node_modules"]
