@@ -9,7 +9,10 @@ const options = {
   focussedLineForeground: "black",
   editorBackground: "blue",
   editorForeground: "white",
-  cursorColor: "rgba(255,0,0,1)"
+  cursorColor: "rgba(255,0,0,1)",
+  onChange: (ev: any) => {
+    console.log(ev.getPlainTextContent());
+  }
 };
 
 function Main() {

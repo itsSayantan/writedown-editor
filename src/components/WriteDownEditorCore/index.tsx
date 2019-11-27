@@ -30,6 +30,11 @@ export function WriteDownEditor(props: WriteDownEditorProps) {
       (EDITOR_VALUE.paddingTopBottom + EDITOR_VALUE.heightOfEachLine) *
       (state.currentLineNumber - 1);
   }
+
+  const getPlainTextContent = (): string => {
+    return (document.querySelector("#container") as HTMLElement)?.innerText;
+  };
+
   return (
     <>
       <div
@@ -50,12 +55,15 @@ export function WriteDownEditor(props: WriteDownEditorProps) {
               focussedLine={index === state.currentLineNumber - 1}
               key={key}
               currentColumnNumber={state.currentColumnNumber}
+              currentLineNumber={state.currentLineNumber}
+              getPlainTextContent={getPlainTextContent}
               styles={{
                 lineBackground: props?.options?.lineBackground,
                 lineForeground: props?.options?.lineForeground,
                 focussedLineBackground: props?.options?.focussedLineBackground,
                 focussedLineForeground: props?.options?.focussedLineForeground
               }}
+              onChange={props?.options?.onChange}
             />
           );
         })}
@@ -64,9 +72,6 @@ export function WriteDownEditor(props: WriteDownEditorProps) {
           fromLeft={fromLeft}
           styles={{ cursorColor: props?.options?.cursorColor }}
         />
-      </div>
-      <div>
-        Ln {state.currentLineNumber}, Col {state.currentColumnNumber}
       </div>
       <canvas ref={canvasRef}></canvas>
     </>

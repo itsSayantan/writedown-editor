@@ -38,6 +38,14 @@ export type OnUpdateCurrentColumnNumber = {
   currentColumnNumber: number;
 };
 
+export type WriteDownOnChangeEventObject = {
+  currentLineContent: string;
+  getPlainTextContent: () => string;
+  numberOfLines: number;
+  lineNumber: number;
+  columnNumber: number;
+};
+
 export type WriteDownEditorProps = {
   options: {
     lineBackground: string;
@@ -47,5 +55,6 @@ export type WriteDownEditorProps = {
     editorBackground: string;
     editorForeground: string;
     cursorColor: string;
+    onChange: (ev: WriteDownOnChangeEventObject) => void;
   };
 };

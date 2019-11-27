@@ -30,6 +30,15 @@ export function Line(props: LineProps) {
     }
   }, [props.focussedLine, props.content]);
 
+  React.useEffect(() => {
+    if (props.focussedLine) callOnChange();
+  }, [
+    props.content,
+    props.numberOfLines,
+    props.currentLineNumber,
+    props.currentColumnNumber
+  ]);
+
   const getContent = (
     startingIndexOfTheStringBeforeCursor: number,
     numberOfCharactersOfTheStringBeforeCursor: number,
@@ -216,6 +225,16 @@ export function Line(props: LineProps) {
       payload: {
         currentColumnNumber: selection.focusOffset + 1
       }
+    });
+  };
+
+  const callOnChange = () => {
+    props.onChange({
+      currentLineContent: props.content,
+      getPlainTextContent: props.getPlainTextContent,
+      numberOfLines: props.numberOfLines,
+      lineNumber: props.currentLineNumber,
+      columnNumber: props.currentColumnNumber
     });
   };
 

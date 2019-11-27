@@ -1,4 +1,7 @@
-import { DispatchType } from "@Components/WriteDownEditorCore/model";
+import {
+  DispatchType,
+  WriteDownOnChangeEventObject
+} from "@Components/WriteDownEditorCore/model";
 
 export type LineProps = {
   id: number;
@@ -7,6 +10,8 @@ export type LineProps = {
   numberOfLines: number;
   focussedLine: boolean;
   currentColumnNumber: number;
+  currentLineNumber: number;
+  getPlainTextContent: () => string;
   dispatch: React.Dispatch<DispatchType>;
   styles: {
     lineBackground: string;
@@ -14,4 +19,5 @@ export type LineProps = {
     focussedLineBackground: string;
     focussedLineForeground: string;
   };
+  onChange: (ev: WriteDownOnChangeEventObject) => void;
 };

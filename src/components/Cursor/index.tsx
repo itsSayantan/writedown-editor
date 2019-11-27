@@ -15,7 +15,7 @@ export function Cursor(props: Props) {
         left: props.fromLeft + "px",
         top: props.fromTop + "px",
         visibility: isVisible ? "visible" : "hidden",
-        backgroundColor: props.styles.cursorColor
+        backgroundColor: props?.styles?.cursorColor
       }}
     ></div>
   );
