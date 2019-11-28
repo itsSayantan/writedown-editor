@@ -53,7 +53,28 @@ export function Line(props: LineProps) {
     };
   };
 
-  const handleKeyDown = (ev: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyCombinationEvents = (
+    ev: React.KeyboardEvent<HTMLDivElement>
+  ): boolean => {
+    if (ev.ctrlKey && ev.key === "c") {
+      ev.preventDefault();
+      const selection = window.getSelection();
+      const anchorNode = selection.anchorOffset;
+      const focusNode = selection.focusOffset;
+
+      console.log(anchorNode, focusNode);
+      return true;
+    }
+    return false;
+  };
+
+  const handleKeyDown = (ev: React.KeyboardEvent<HTMLDivElement>): void => {
+    const handled = handleKeyCombinationEvents(ev);
+
+    if (handled) {
+      return;
+    }
+
     if (ev?.key === "Tab") ev.preventDefault();
     const key = ev.key;
 
