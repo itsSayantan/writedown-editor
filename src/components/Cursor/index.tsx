@@ -5,7 +5,7 @@ export function Cursor(props: Props) {
   const [isVisible, setVisibility] = React.useState(true);
   React.useEffect(() => {
     const timer = setTimeout(() => setVisibility(!isVisible), 500);
-    return () => clearInterval(timer);
+    return () => clearTimeout(timer);
   }, [isVisible]);
 
   return (
@@ -14,7 +14,8 @@ export function Cursor(props: Props) {
       style={{
         left: props.fromLeft + "px",
         top: props.fromTop + "px",
-        visibility: isVisible ? "visible" : "hidden"
+        visibility: isVisible ? "visible" : "hidden",
+        backgroundColor: props?.styles?.cursorColor
       }}
     ></div>
   );

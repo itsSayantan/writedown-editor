@@ -30,6 +30,15 @@ export function Line(props: LineProps) {
     }
   }, [props.focussedLine, props.content]);
 
+  React.useEffect(() => {
+    if (props.focussedLine) callOnChange();
+  }, [
+    props.content,
+    props.numberOfLines,
+    props.currentLineNumber,
+    props.currentColumnNumber
+  ]);
+
   const getContent = (
     startingIndexOfTheStringBeforeCursor: number,
     numberOfCharactersOfTheStringBeforeCursor: number,
@@ -44,7 +53,28 @@ export function Line(props: LineProps) {
     };
   };
 
-  const handleKeyDown = (ev: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyCombinationEvents = (
+    ev: React.KeyboardEvent<HTMLDivElement>
+  ): boolean => {
+    if (ev.ctrlKey && ev.key === "c") {
+      ev.preventDefault();
+      const selection = window.getSelection();
+      const anchorNode = selection.anchorOffset;
+      const focusNode = selection.focusOffset;
+
+      console.log(anchorNode, focusNode);
+      return true;
+    }
+    return false;
+  };
+
+  const handleKeyDown = (ev: React.KeyboardEvent<HTMLDivElement>): void => {
+    const handled = handleKeyCombinationEvents(ev);
+
+    if (handled) {
+      return;
+    }
+
     if (ev?.key === "Tab") ev.preventDefault();
     const key = ev.key;
 
@@ -219,6 +249,16 @@ export function Line(props: LineProps) {
     });
   };
 
+  const callOnChange = () => {
+    props.onChange({
+      currentLineContent: props.content,
+      getPlainTextContent: props.getPlainTextContent,
+      numberOfLines: props.numberOfLines,
+      lineNumber: props.currentLineNumber,
+      columnNumber: props.currentColumnNumber
+    });
+  };
+
   return (
     <div
       ref={ref}
@@ -228,6 +268,17 @@ export function Line(props: LineProps) {
       onKeyDown={handleKeyDown}
       onClick={handleClick}
       tabIndex={props.id}
+      style={
+        props?.focussedLine
+          ? {
+              backgroundColor: props?.styles?.lineBackground,
+              color: props?.styles?.lineForeground
+            }
+          : {
+              backgroundColor: props?.styles?.focussedLineBackground,
+              color: props?.styles?.focussedLineForeground
+            }
+      }
     ></div>
   );
 }
