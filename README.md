@@ -16,7 +16,7 @@ Here is a sample code which shows the use of **markdown-editor** inside a `React
 ```
 import React from "react";
 import ReactDOM from "react-dom";
-import { WriteDownEditor } from "writedown-editor";
+import WriteDownEditor from "writedown-editor";
 
 const options = {
   lineBackground: "black",
