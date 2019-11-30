@@ -1,6 +1,6 @@
-./src
-config
-__test__
+./src/**/*
+./config/**/*
+./__test__/**/*
 .babelrc
 .gitignore
 postcss.config.js
