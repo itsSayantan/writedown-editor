@@ -20,8 +20,7 @@
     "lint": "eslint .",
     "start": "NODE_ENV='development' webpack-dev-server --config ./config/webpack.config.js",
     "react:build": "NODE_ENV='production' webpack --config ./config/webpack.config.js && cp index.html ./dist/index.html",
-    "export:build": "NODE_ENV='production' webpack --config ./config/webpack.config.js && cp index.d.ts ./dist/index.d.ts",
-    "npm:publish": "npm run export:build && npm publish"
+    "export:build": "NODE_ENV='production' webpack --config ./config/webpack.config.js && cp index.d.ts ./dist/index.d.ts"
   },
   "devDependencies": {
     "@babel/cli": "^7.7.0",
