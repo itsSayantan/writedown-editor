@@ -1,6 +1,6 @@
 {
   "name": "writedown-editor",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/itssayantan/writedown-editor"
@@ -20,7 +20,7 @@
     "lint": "eslint .",
     "start": "NODE_ENV='development' webpack-dev-server --config ./config/webpack.config.js",
     "react:build": "NODE_ENV='production' webpack --config ./config/webpack.config.js && cp index.html ./dist/index.html",
-    "export:build": "NODE_ENV='production' webpack --config ./config/webpack.config.js"
+    "export:build": "NODE_ENV='production' webpack --config ./config/webpack.config.js && cp index.d.ts ./dist/index.d.ts"
   },
   "devDependencies": {
     "@babel/cli": "^7.7.0",

@@ -1,4 +1,4 @@
-export type Props = {
+export type CursorProps = {
   fromLeft: number;
   fromTop: number;
   styles: {

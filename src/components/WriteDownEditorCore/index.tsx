@@ -10,7 +10,7 @@ import { WriteDownEditorProps } from "./model";
 import { EDITOR_VALUE } from "@Shared/constants";
 import { Cursor } from "@Components/Cursor";
 
-export function WriteDownEditor(props: WriteDownEditorProps) {
+function WriteDownEditor(props: WriteDownEditorProps) {
   const [state, dispatch] = React.useReducer(reducer, getDefaultValues());
   const canvasRef: React.MutableRefObject<HTMLCanvasElement> = React.useRef();
 
@@ -77,3 +77,4 @@ export function WriteDownEditor(props: WriteDownEditorProps) {
     </>
   );
 }
+export default WriteDownEditor;

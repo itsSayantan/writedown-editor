@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { WriteDownEditor } from "@Components/WriteDownEditorCore";
+import WriteDownEditor from "@Components/WriteDownEditorCore";
 
 const options = {
   lineBackground: "black",

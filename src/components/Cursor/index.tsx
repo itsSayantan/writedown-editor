@@ -1,7 +1,7 @@
 import React from "react";
-import { Props } from "./model";
+import { CursorProps } from "./model";
 
-export function Cursor(props: Props) {
+export function Cursor(props: CursorProps) {
   const [isVisible, setVisibility] = React.useState(true);
   React.useEffect(() => {
     const timer = setTimeout(() => setVisibility(!isVisible), 500);
