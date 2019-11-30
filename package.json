@@ -1,10 +1,17 @@
 {
   "name": "writedown-editor",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/itssayantan/writedown-editor"
   },
+  "keywords": [
+    "writedown-editor",
+    "writedown",
+    "editor",
+    "text",
+    "code"
+  ],
   "private": false,
   "main": "./dist/bundle.js",
   "license": "MIT",
