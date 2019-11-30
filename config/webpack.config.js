@@ -9,7 +9,7 @@ module.exports = {
     process.env.NODE_ENV === "production"
       ? "none"
       : "cheap-module-eval-source-map",
-  entry: "./index.tsx",
+  entry: "./src/components/WriteDownEditorCore/index.tsx",
   resolve: {
     extensions: [".ts", ".tsx", ".js"],
     alias: {
