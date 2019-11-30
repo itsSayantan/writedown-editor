@@ -18,5 +18,5 @@ type WriteDownEditorProps = {
     onChange: (ev: WriteDownOnChangeEventObject) => void;
   };
 };
-declare type WriteDownEditor = (props: WriteDownEditorProps) => JSX.Element;
+declare const WriteDownEditor: (props: WriteDownEditorProps) => JSX.Element;
 export default WriteDownEditor;
