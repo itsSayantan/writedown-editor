@@ -1,4 +1,4 @@
-src
+./src
 config
 __test__
 .babelrc
@@ -9,4 +9,4 @@ yarn.lock
 yarn-error.log
 index.html
 index.tsx
-index.d.ts
+./index.d.ts
