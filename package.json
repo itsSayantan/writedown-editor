@@ -6,13 +6,14 @@
     "url": "https://github.com/itssayantan/writedown-editor"
   },
   "private": false,
-  "main": "main.js",
+  "main": "./dist/bundle.js",
   "license": "MIT",
   "scripts": {
     "test": "jest --no-watch",
     "lint": "eslint .",
     "start": "NODE_ENV='development' webpack-dev-server --config ./config/webpack.config.js",
-    "react:build": "NODE_ENV='production' webpack --config ./config/webpack.config.js && cp index.html ./dist/index.html"
+    "react:build": "NODE_ENV='production' webpack --config ./config/webpack.config.js && cp index.html ./dist/index.html",
+    "export:build": "NODE_ENV='production' webpack --config ./config/webpack.config.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.7.0",

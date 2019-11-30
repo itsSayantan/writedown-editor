@@ -8,7 +8,7 @@
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "jsx": "react", // to use jsx in ts file (i.e., tsx)
     "esModuleInterop": true, // to use default imports
     "moduleResolution": "node", // to import module in node's style (w/o specifying file format)
