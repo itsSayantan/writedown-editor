@@ -56,15 +56,8 @@ export function Line(props: LineProps) {
   const handleKeyCombinationEvents = (
     ev: React.KeyboardEvent<HTMLDivElement>
   ): boolean => {
-    if (ev.ctrlKey && ev.key === "c") {
-      ev.preventDefault();
-      const selection = window.getSelection();
-      const anchorNode = selection.anchorOffset;
-      const focusNode = selection.focusOffset;
-
-      console.log(anchorNode, focusNode);
-      return true;
-    }
+    // return false if key combination is not pressed,
+    // if key combination is pressed, handle it and return true
     return false;
   };
 
