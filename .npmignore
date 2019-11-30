@@ -7,6 +7,4 @@ postcss.config.js
 tsconfig.json
 yarn.lock
 yarn-error.log
-index.html
-index.tsx
 ./index.d.ts
