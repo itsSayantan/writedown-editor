@@ -9,7 +9,7 @@ module.exports = {
     process.env.NODE_ENV === "production"
       ? "none"
       : "cheap-module-eval-source-map",
-  entry: "./src/components/WriteDownEditorCore/index.tsx",
+  entry: "./src/index.ts",
   resolve: {
     extensions: [".ts", ".tsx", ".js"],
     alias: {
@@ -22,7 +22,9 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, "../dist"),
-    filename: "bundle.js"
+    filename: "bundle.js",
+    library: "WriteDownEditor",
+    libraryTarget: "umd"
   },
   devServer: {
     contentBase: path.resolve(__dirname, REACT_BASE_PATH),
@@ -46,6 +48,20 @@ module.exports = {
         use: ["ts-loader"]
       }
     ]
+  },
+  externals: {
+    react: {
+      root: "React",
+      commonjs2: "react",
+      commonjs: "react",
+      amd: "react"
+    },
+    "react-dom": {
+      root: "ReactDOM",
+      commonjs2: "react-dom",
+      commonjs: "react-dom",
+      amd: "react-dom"
+    }
   },
   plugins: [new webpack.HotModuleReplacementPlugin()]
 };
