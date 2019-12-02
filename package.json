@@ -1,6 +1,6 @@
 {
   "name": "writedown-editor",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/itssayantan/writedown-editor"
@@ -58,6 +58,7 @@
     "Parnab Sanyal <sanyal.parnab96@gmail.com> (https://github.com/iamparnab)"
   ],
   "dependencies": {
+    "custom-error-boundary": "^1.1.1",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "uuid": "^3.3.3"

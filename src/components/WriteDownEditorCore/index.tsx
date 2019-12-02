@@ -1,4 +1,5 @@
 import React from "react";
+import CEB from "custom-error-boundary";
 
 import { Line } from "@Components/Line";
 
@@ -36,45 +37,48 @@ function WriteDownEditor(props: WriteDownEditorProps) {
   };
 
   return (
-    <>
-      <div
-        id="container"
-        style={{
-          backgroundColor: props?.options?.editorBackground,
-          color: props?.options?.editorForeground
-        }}
-      >
-        {state.arrayOfLines.map((key, index) => {
-          return (
-            <Line
-              dispatch={dispatch}
-              id={index + 1}
-              uid={key}
-              content={state.keyContentMapping.get(key)}
-              numberOfLines={state.numberOfLines}
-              focussedLine={index === state.currentLineNumber - 1}
-              key={key}
-              currentColumnNumber={state.currentColumnNumber}
-              currentLineNumber={state.currentLineNumber}
-              getPlainTextContent={getPlainTextContent}
-              styles={{
-                lineBackground: props?.options?.lineBackground,
-                lineForeground: props?.options?.lineForeground,
-                focussedLineBackground: props?.options?.focussedLineBackground,
-                focussedLineForeground: props?.options?.focussedLineForeground
-              }}
-              onChange={props?.options?.onChange}
-            />
-          );
-        })}
-        <Cursor
-          fromTop={fromTop}
-          fromLeft={fromLeft}
-          styles={{ cursorColor: props?.options?.cursorColor }}
-        />
-      </div>
-      <canvas ref={canvasRef}></canvas>
-    </>
+    <CEB theme="Basic">
+      <>
+        <div
+          id="container"
+          style={{
+            backgroundColor: props?.options?.editorBackground,
+            color: props?.options?.editorForeground
+          }}
+        >
+          {state.arrayOfLines.map((key, index) => {
+            return (
+              <Line
+                dispatch={dispatch}
+                id={index + 1}
+                uid={key}
+                content={state.keyContentMapping.get(key)}
+                numberOfLines={state.numberOfLines}
+                focussedLine={index === state.currentLineNumber - 1}
+                key={key}
+                currentColumnNumber={state.currentColumnNumber}
+                currentLineNumber={state.currentLineNumber}
+                getPlainTextContent={getPlainTextContent}
+                styles={{
+                  lineBackground: props?.options?.lineBackground,
+                  lineForeground: props?.options?.lineForeground,
+                  focussedLineBackground:
+                    props?.options?.focussedLineBackground,
+                  focussedLineForeground: props?.options?.focussedLineForeground
+                }}
+                onChange={props?.options?.onChange}
+              />
+            );
+          })}
+          <Cursor
+            fromTop={fromTop}
+            fromLeft={fromLeft}
+            styles={{ cursorColor: props?.options?.cursorColor }}
+          />
+        </div>
+        <canvas ref={canvasRef}></canvas>
+      </>
+    </CEB>
   );
 }
 export default WriteDownEditor;
