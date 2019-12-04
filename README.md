@@ -4,7 +4,7 @@ The main editor for writedown [https://github.com/iamparnab/writedown](https://g
 
 # Installation
 
-`> $ npm install --save writedown-editor`
+`$ npm install --save writedown-editor`
 or
 `yarn add writedown-editor`
 if you are using yarn
