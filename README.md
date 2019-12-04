@@ -4,7 +4,7 @@ The main editor for writedown [https://github.com/iamparnab/writedown](https://g
 
 # Installation
 
-`npm install --save writedown-editor`
+`>$ npm install --save writedown-editor`
 or
 `yarn add writedown-editor`
 if you are using yarn
@@ -13,7 +13,7 @@ if you are using yarn
 
 Here is a sample code which shows the use of **markdown-editor** inside a `React` component.
 
-```
+```js
 import React from "react";
 import ReactDOM from "react-dom";
 import WriteDownEditor from "writedown-editor";
@@ -43,7 +43,7 @@ ReactDOM.render(<Main />, document.querySelector("#root"));
 The `WriteDownEditor` component takes an `options` prop.
 The `options` prop is of type `WriteDownEditorProp`
 
-```
+```js
 type WriteDownEditorProps = {
   options: {
     lineBackground: string;
@@ -60,7 +60,7 @@ type WriteDownEditorProps = {
 
 The `onChange` event handler has `WriteDownOnChangeEventObject` type
 
-```
+```js
 type WriteDownOnChangeEventObject = {
     currentLineContent: string;
     getPlainTextContent: () => string;
